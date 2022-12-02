@@ -22,19 +22,47 @@ include('footer.php');
     $sid = $cname = $pincode = "";
 
     //Input fields validation  
+    //validation for city name
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //String Validation  
         if (empty($_POST["cname"])) {
             $cnameErr = "City Name is Required";
         } else {
-            $city = input_data($_POST["city"]);
+            $cname = input_data($_POST["cname"]);
             // check if name only contains letters and whitespace  
-            if (!preg_match("/^[a-zA-Z ]*$/", $city)) {
-                $cityErr = "Only alphabets and white space are allowed";
+            if (!preg_match("/^[a-zA-Z ]*$/", $cname)) {
+                $cnameErr = "Only alphabets and white space are allowed";
             }
         }
     }
+
+    //validation for state id
+    if (empty($_POST["sid"])) {
+        $sidErr = "State id is required";
+    } else {
+        $sid = input_data($_POST["sid"]);
+        // check if state id is well-formed  
+        if (!preg_match("/^[0-9]*$/", $sid)) {
+            $sidErr = "Only numeric value is allowed.";
+        }
+    }
+
+    //validation for pincode
+    if (empty($_POST["pincode"])) {
+        $pincodeErr = "Pincode is required";
+    } else {
+        $pincode = input_data($_POST["pincode"]);
+        // check if pincode is well-formed  
+        if (!preg_match("/^[0-9]*$/", $pincode)) {
+            $pincodeErr = "Only numeric value is allowed.";
+        }
+        //check pincode length should not be less and greator than 10  
+        if (strlen($pincode) != 6) {
+            $pincodeErr = "Pincode is Required Conatain only 6 digit.";
+        }
+    }
+    //method for fetching data
     function input_data($data)
     {
         $data = trim($data);
@@ -43,7 +71,7 @@ include('footer.php');
         return $data;
     }
     ?>
-    <form action="" method="POST">
+    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <!-- Designing of City form -->
         <center>
             <h3>City Management</h3>
@@ -52,18 +80,22 @@ include('footer.php');
                     <td> STATE ID</td>
                     <td>:</td>
                     <td><input class="input" type="text" name="sid">
-                        <span class="error">* <?php echo $stateErr; ?> </span>
+                        <span class="error">* <?php echo $sidErr; ?> </span>
                     </td>
                 </tr>
                 <tr>
                     <td>CITY NAME</td>
                     <td>:</td>
-                    <td><input class="input" type="text" name="cname" required></td>
+                    <td><input class="input" type="text" name="cname">
+                        <span class="error">* <?php echo $cnameErr; ?> </span>
+                    </td>
                 </tr>
                 <tr>
                     <td>PINCODE</td>
                     <td>:</td>
-                    <td><input class="input" type="text" name="pincode" required></td>
+                    <td><input class="input" type="text" name="pincode">
+                        <span class="error">* <?php echo $pincodeErr; ?> </span>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="3" align="center"><input class="submit" type="submit" name="Insert" value="Insert" id="Insert"></td>
@@ -81,7 +113,8 @@ include('footer.php');
 //code od insertion
 
 if (isset($_POST['Insert'])) {
-    if ($stateErr == "") {
+    //apply Validation 
+    if ($cnameErr == "" && $sidErr == "" && $pincodeErr == "") {
         //fetch data from database
         $sid = $_POST['sid'];
         $cname = $_POST['cname'];
