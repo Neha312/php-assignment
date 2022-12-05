@@ -93,7 +93,7 @@ include('footer.php');
     } else {
         $password = input_data($_POST["password"]);
         // check if mobile no is well-formed
-        if (!preg_match("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/", $password)) {
+        if (!preg_match("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8}$/", $password)) {
             $passwordErr = "At least one upper case  one lower case  special character & leght";
         }
     }
